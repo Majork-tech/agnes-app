@@ -1,14 +1,8 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import StudentSidebar from './components/StudentSidebar';
+import ParentSidebar from './components/ParentSideBar';
 import { Box, useTheme } from '@mui/material';
-
-// Hard-coded user data for testing
-const user = {
-  role: 'student', // Change this to 'admin' or 'student' as needed
-  name: 'John Doe',
-  email: 'john.doe@example.com',
-};
 
 // Define constants at the top level
 const collapsedWidth = 64;
@@ -19,10 +13,30 @@ export default function App() {
   const theme = useTheme();
   const isHomepage = location.pathname === '/';
 
+  // Determine the user's role based on the current route
+  const getRoleFromRoute = () => {
+    if (location.pathname.startsWith('/parent')) {
+      return 'parent';
+    } else if (location.pathname.startsWith('/admin') || location.pathname.startsWith('/create-quizzes')) {
+      return 'admin';
+    } else if (location.pathname.startsWith('/student') || location.pathname.startsWith('/view-quizzes')) {
+      return 'student';
+    }
+    return null; // No role for the homepage or other routes
+  };
+
+  const role = getRoleFromRoute();
+
   return (
     <Box sx={{ display: 'flex' }}>
       {!isHomepage && (
-        user.role === 'admin' ? <Sidebar /> : <StudentSidebar user={user} />
+        role === 'admin' ? (
+          <Sidebar />
+        ) : role === 'student' ? (
+          <StudentSidebar />
+        ) : role === 'parent' ? (
+          <ParentSidebar />
+        ) : null
       )}
 
       <Box

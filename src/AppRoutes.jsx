@@ -10,21 +10,25 @@ import ViewUploads from './pages/ViewUploads';
 import RegisterStudent from './pages/RegisterStudent';
 import Invoices from './pages/Invoices';
 import Logout from './pages/Logout';
-
-
-// Student-specific pages
 import ViewVideos from './pages/ViewVideos';
 import StudentUploadToAdmin from './pages/StudentUploadToAdmin';
 import AdminUploads from './pages/AdminUploads';
 import ViewResultsStudent from './pages/ViewResultsStudent';
 import ViewQuizzesStudent from './pages/ViewQuizzesStudent';
 import AttemptQuiz from './pages/AttemptQuiz';
+import ParentDashboard from './pages/ParentDashboard';
+import ViewChildResults from './pages/ViewChildResults';
+import ViewInvoices from './pages/ViewInvoices';
+import IndexPage from './components/IndexPage'; // Import the new IndexPage
 
 export default function AppRoutes() {
   return (
     <Routes>
+      {/* Index Page */}
+      <Route path="/" element={<IndexPage />} />
+
       {/* Common Routes */}
-      <Route path="/" element={<Homepage />} />
+      <Route path="/homepage" element={<Homepage />} />
       <Route path="/logout" element={<Logout />} />
 
       {/* Admin Routes */}
@@ -46,6 +50,11 @@ export default function AppRoutes() {
       <Route path="/admin-uploads" element={<AdminUploads />} />
       <Route path="/view-results-student" element={<ViewResultsStudent />} />
       <Route path="/attempt-quiz" element={<AttemptQuiz />} />
+
+      {/* Parent Routes */}
+      <Route path="/parent-dashboard" element={<ParentDashboard />} />
+      <Route path="/view-child-results" element={<ViewChildResults />} />
+      <Route path="/view-invoices" element={<ViewInvoices />} />
     </Routes>
   );
 }
