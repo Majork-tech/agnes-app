@@ -11,12 +11,14 @@ import ViewUploads from './pages/ViewUploads';
 import RegisterStudent from './pages/RegisterStudent';
 import Invoices from './pages/Invoices';
 import Logout from './pages/Logout';
+import TakeQuiz from './pages/TakeQuiz';
 
 export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Homepage />} />
       <Route path="/create-quizzes" element={<CreateQuizzes />} />
+      <Route path="/take-quiz/" element={<TakeQuiz />} />
       <Route path="/view-submissions" element={<ViewSubmissions />} />
       <Route path="/grade-results" element={<GradeResults />} />
       <Route path="/view-results" element={<ViewResults />} />

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { 
+import {
   Drawer,
   List,
   ListItem,
@@ -12,10 +12,9 @@ import {
   useTheme,
   IconButton,
   Avatar,
-  Menu,
-  MenuItem,
   useMediaQuery,
-  Collapse
+  Collapse,
+  Container,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -23,44 +22,37 @@ import {
   ChevronRight,
   Quiz,
   Visibility,
-  Grading,
   ListAlt,
   VideoLibrary,
   UploadFile,
-  People,
-  Receipt,
-  Person,
-  Settings,
-  ExitToApp
+  ExitToApp,
 } from '@mui/icons-material';
 
-const Sidebar = ({ user }) => {
+const StudentSidebar = () => {
   const theme = useTheme();
   const location = useLocation();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const profileOpen = Boolean(anchorEl);
 
+  // Mock user data (replace with actual user data from your backend or session)
+  const user = {
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+  };
+
+  // Navigation items for the student
   const menuItems = [
-    { path: '/create-quizzes', label: 'Create Quizzes', icon: <Quiz /> },
-    { path: '/take-quiz', label: 'Take Quiz', icon: <Quiz /> },
-    { path: '/view-submissions', label: 'View Submissions', icon: <Visibility /> },
-    { path: '/grade-results', label: 'Grade Quiz Results', icon: <Grading /> },
-    { path: '/view-results', label: 'View Results', icon: <ListAlt /> },
-    { path: '/upload-videos', label: 'Upload Videos', icon: <VideoLibrary /> },
-    { path: '/student-uploads', label: 'Student Personal Uploads', icon: <UploadFile /> },
-    { path: '/view-uploads', label: 'View Student Uploads', icon: <People /> },
-    { path: '/register-student', label: 'Register Student', icon: <People /> },
-    { path: '/invoices', label: 'Invoices', icon: <Receipt /> },
-    { path: '/logout', label: 'Logout', icon: <ExitToApp /> }
+    { path: '/view-quizzes', label: 'View Quizzes', icon: <Quiz /> },
+    { path: '/view-results', label: 'View Quiz Results', icon: <ListAlt /> },
+    { path: '/view-videos', label: 'View Videos', icon: <VideoLibrary /> },
+    { path: '/student-upload', label: 'Upload to Admin', icon: <UploadFile /> },
+    { path: '/admin-uploads', label: 'View Admin Uploads', icon: <Visibility /> },
+    { path: '/logout', label: 'Logout', icon: <ExitToApp /> },
   ];
 
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
   const handleCollapseToggle = () => setIsCollapsed(!isCollapsed);
-  const handleProfileMenu = (event) => setAnchorEl(event.currentTarget);
-  const handleMenuClose = () => setAnchorEl(null);
 
   const drawerWidth = isCollapsed ? 64 : 240;
   const showCollapseButton = !isMobile;
@@ -68,40 +60,42 @@ const Sidebar = ({ user }) => {
   const drawerContent = (
     <>
       {/* User Profile Section */}
-      <Box sx={{ 
-        p: isCollapsed ? 1 : 3, 
-        borderBottom: `1px solid ${theme.palette.divider}`,
-        textAlign: 'center',
-        position: 'relative'
-      }}>
-        <IconButton onClick={handleProfileMenu} sx={{ p: isCollapsed ? 0 : 1 }}>
-          <Avatar sx={{ 
-            width: isCollapsed ? 40 : 56, 
+      <Box
+        sx={{
+          p: isCollapsed ? 1 : 3,
+          borderBottom: `1px solid ${theme.palette.divider}`,
+          textAlign: 'center',
+          position: 'relative',
+        }}
+      >
+        <Avatar
+          sx={{
+            width: isCollapsed ? 40 : 56,
             height: isCollapsed ? 40 : 56,
             bgcolor: theme.palette.primary.main,
-            mb: isCollapsed ? 0 : 2
-          }}>
-            {isCollapsed ? (user?.name?.[0] || <Person />) : <Person />}
-          </Avatar>
-        </IconButton>
+            mb: isCollapsed ? 0 : 2,
+          }}
+        >
+          {isCollapsed ? user.name[0] : <Person />}
+        </Avatar>
 
         <Collapse in={!isCollapsed} orientation="horizontal">
           <Typography variant="subtitle1" noWrap>
-            {user?.name || 'Admin User'}
+            {user.name}
           </Typography>
           <Typography variant="body2" color="text.secondary" noWrap>
-            {user?.email || 'admin@example.com'}
+            {user.email}
           </Typography>
         </Collapse>
 
         {showCollapseButton && (
-          <IconButton 
+          <IconButton
             onClick={handleCollapseToggle}
-            sx={{ 
+            sx={{
               position: 'absolute',
               right: 8,
               top: 8,
-              color: theme.palette.text.secondary
+              color: theme.palette.text.secondary,
             }}
           >
             {isCollapsed ? <ChevronRight /> : <ChevronLeft />}
@@ -112,8 +106,8 @@ const Sidebar = ({ user }) => {
       {/* Navigation Items */}
       <List component="nav">
         {menuItems.map((item) => (
-          <ListItem 
-            key={item.path} 
+          <ListItem
+            key={item.path}
             disablePadding
             component={NavLink}
             to={item.path}
@@ -122,7 +116,7 @@ const Sidebar = ({ user }) => {
               color: theme.palette.text.primary,
               '&.active': {
                 backgroundColor: theme.palette.action.selected,
-              }
+              },
             }}
           >
             <ListItemButton
@@ -130,18 +124,20 @@ const Sidebar = ({ user }) => {
               onClick={isMobile ? handleDrawerToggle : undefined}
               sx={{
                 justifyContent: isCollapsed ? 'center' : 'flex-start',
-                px: isCollapsed ? 0 : 2
+                px: isCollapsed ? 0 : 2,
               }}
             >
-              <ListItemIcon sx={{ 
-                minWidth: 0,
-                color: 'inherit',
-                mr: isCollapsed ? 0 : 2
-              }}>
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  color: 'inherit',
+                  mr: isCollapsed ? 0 : 2,
+                }}
+              >
                 {item.icon}
               </ListItemIcon>
               <Collapse in={!isCollapsed} orientation="horizontal">
-                <ListItemText 
+                <ListItemText
                   primary={item.label}
                   primaryTypographyProps={{ variant: 'body2' }}
                 />
@@ -170,11 +166,11 @@ const Sidebar = ({ user }) => {
           color="inherit"
           aria-label="open drawer"
           onClick={handleDrawerToggle}
-          sx={{ 
+          sx={{
             position: 'fixed',
             left: 16,
             top: 16,
-            zIndex: theme.zIndex.drawer + 1
+            zIndex: theme.zIndex.drawer + 1,
           }}
         >
           <MenuIcon />
@@ -208,8 +204,27 @@ const Sidebar = ({ user }) => {
       >
         {drawerContent}
       </Drawer>
+
+      {/* Main Content */}
+      <Container
+        sx={{
+          marginLeft: isMobile ? 0 : `${drawerWidth}px`,
+          transition: theme.transitions.create('margin', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+          }),
+          p: 3,
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          Welcome, {user.name}!
+        </Typography>
+        <Typography variant="body1">
+          This is your student dashboard. Use the sidebar to navigate.
+        </Typography>
+      </Container>
     </>
   );
 };
 
-export default Sidebar;
+export default StudentSidebar;
