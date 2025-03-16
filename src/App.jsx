@@ -1,10 +1,19 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
+import StudentSidebar from './components/StudentSidebar';
 import { Box, useTheme } from '@mui/material';
+
+// Hard-coded user data for testing
+const user = {
+  role: 'student', // Change this to 'admin' or 'student' as needed
+  name: 'John Doe',
+  email: 'john.doe@example.com',
+};
 
 // Define constants at the top level
 const collapsedWidth = 64;
 const expandedWidth = 240;
+
 export default function App() {
   const location = useLocation();
   const theme = useTheme();
@@ -12,16 +21,19 @@ export default function App() {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      {!isHomepage && <Sidebar />}
-      
-      <Box 
-        component="main" 
-        sx={{ 
+      {!isHomepage && (
+        user.role === 'admin' ? <Sidebar /> : <StudentSidebar user={user} />
+      )}
+
+      <Box
+        component="main"
+        sx={{
           flexGrow: 1,
-          transition: theme => theme.transitions.create('margin', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-          }),
+          transition: (theme) =>
+            theme.transitions.create('margin', {
+              easing: theme.transitions.easing.sharp,
+              duration: theme.transitions.duration.leavingScreen,
+            }),
           marginLeft: isHomepage ? 0 : `-${collapsedWidth}px`,
           ...(!isHomepage && {
             marginLeft: 0,

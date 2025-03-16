@@ -14,7 +14,6 @@ import {
   Avatar,
   useMediaQuery,
   Collapse,
-  Container,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -26,28 +25,24 @@ import {
   VideoLibrary,
   UploadFile,
   ExitToApp,
+  Person
 } from '@mui/icons-material';
 
-const StudentSidebar = () => {
+const StudentSidebar = ({ user }) => {
   const theme = useTheme();
   const location = useLocation();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  // Mock user data (replace with actual user data from your backend or session)
-  const user = {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-  };
-
   // Navigation items for the student
   const menuItems = [
     { path: '/view-quizzes', label: 'View Quizzes', icon: <Quiz /> },
-    { path: '/view-results', label: 'View Quiz Results', icon: <ListAlt /> },
+    { path: '/view-results-student', label: 'View Quiz Results', icon: <ListAlt /> },
     { path: '/view-videos', label: 'View Videos', icon: <VideoLibrary /> },
     { path: '/student-upload', label: 'Upload to Admin', icon: <UploadFile /> },
     { path: '/admin-uploads', label: 'View Admin Uploads', icon: <Visibility /> },
+    {path: '/attempt-quiz', label: 'Attempt Quiz', icon: <Quiz />},
     { path: '/logout', label: 'Logout', icon: <ExitToApp /> },
   ];
 
@@ -76,15 +71,15 @@ const StudentSidebar = () => {
             mb: isCollapsed ? 0 : 2,
           }}
         >
-          {isCollapsed ? user.name[0] : <Person />}
+          {isCollapsed ? user?.name?.[0] : <Person />}
         </Avatar>
 
         <Collapse in={!isCollapsed} orientation="horizontal">
           <Typography variant="subtitle1" noWrap>
-            {user.name}
+            {user?.name || 'Student User'}
           </Typography>
           <Typography variant="body2" color="text.secondary" noWrap>
-            {user.email}
+            {user?.email || 'student@example.com'}
           </Typography>
         </Collapse>
 
@@ -204,25 +199,6 @@ const StudentSidebar = () => {
       >
         {drawerContent}
       </Drawer>
-
-      {/* Main Content */}
-      <Container
-        sx={{
-          marginLeft: isMobile ? 0 : `${drawerWidth}px`,
-          transition: theme.transitions.create('margin', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-          }),
-          p: 3,
-        }}
-      >
-        <Typography variant="h4" gutterBottom>
-          Welcome, {user.name}!
-        </Typography>
-        <Typography variant="body1">
-          This is your student dashboard. Use the sidebar to navigate.
-        </Typography>
-      </Container>
     </>
   );
 };
