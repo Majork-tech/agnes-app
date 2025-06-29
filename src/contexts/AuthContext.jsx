@@ -65,7 +65,12 @@ export const AuthProvider = ({ children }) => {
 
   const signIn = async ({ email, password }) => {
     setLoading(true);
+    console.log('Attempting to sign in with:', { email, role: 'hidden' });
+    
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    
+    console.log('Sign in result:', { success: !error, error: error?.message });
+    
     if (error) {
       setLoading(false);
       return { error };

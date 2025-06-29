@@ -1,0 +1,13 @@
+[build]
+  publish = "dist"
+  command = "npm run build"
+
+[build.environment]
+  # These will be overridden by environment variables set in Netlify dashboard
+  VITE_SUPABASE_URL = "https://bitujnpcakhljharmimp.supabase.co"
+  VITE_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpdHVqbnBjYWtobGpoYXJtaW1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2MTI5NTksImV4cCI6MjA2NjE4ODk1OX0.F73g8O49X__OPx-vUuSUvsl3R5zwKkLtX3RiYXUJw8Q"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200 
