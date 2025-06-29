@@ -47,20 +47,22 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const fetchProfile = async (user) => {
-    setLoading(true);
+    console.log('Fetching profile for user:', user.id);
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', user.id)
       .single();
     if (!error && data) {
+      console.log('Profile fetched successfully:', data);
       setProfile(data);
       setUserRole(data.role);
+      console.log('User role set to:', data.role);
     } else {
+      console.log('Error fetching profile:', error);
       setProfile(null);
       setUserRole(null);
     }
-    setLoading(false);
   };
 
   const signIn = async ({ email, password }) => {
@@ -75,10 +77,13 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
       return { error };
     }
+    
+    console.log('Setting user and fetching profile...');
     setUser(data.user);
     await fetchProfile(data.user);
     setIsAuthenticated(true);
     setLoading(false);
+    console.log('Sign in completed, user authenticated:', data.user.id);
     return { user: data.user };
   };
 

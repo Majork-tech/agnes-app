@@ -49,14 +49,24 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isAuthenticated && userRole && role) {
-      if (userRole !== role) {
-        setError('Not authorized for this role');
-        return;
+    // If user is already authenticated and has a role, redirect to appropriate dashboard
+    if (isAuthenticated && userRole) {
+      console.log('User authenticated with role:', userRole);
+      switch (userRole) {
+        case 'admin':
+          navigate('/admindashboard2');
+          break;
+        case 'student':
+          navigate('/student-dashboard2');
+          break;
+        case 'parent':
+          navigate('/parent-dashboard2');
+          break;
+        default:
+          navigate('/');
       }
-      navigate(`/${role}-dashboard2`);
     }
-  }, [isAuthenticated, userRole, role, navigate]);
+  }, [isAuthenticated, userRole, navigate]);
 
   const handleRoleChange = (e, newRole) => {
     if (newRole) setRole(newRole);
@@ -65,8 +75,16 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    
+    if (!role) {
+      setError('Please select a role');
+      return;
+    }
+    
     const { error } = await signIn({ email, password });
-    if (error) setError(error.message || 'Login failed');
+    if (error) {
+      setError(error.message || 'Login failed');
+    }
   };
 
   return (
