@@ -17,14 +17,7 @@ import {
 } from '@mui/material';
 import { ArrowBack, PictureAsPdf, OndemandVideo } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
-
-const palette = {
-  bg: '#F7FAFC',
-  card: '#FFFFFF',
-  primary: '#1976D2',
-  accent: '#FFB300',
-  text: '#37474F',
-};
+import { useTheme } from '@mui/material/styles';
 
 const mockPDFs = [
   {
@@ -61,6 +54,7 @@ const topics = [
 ];
 
 const ViewLearningMaterialMock = () => {
+  const theme = useTheme();
   const [view, setView] = useState('select'); // select | pdf | video
   const [selectedTopic, setSelectedTopic] = useState('');
   const [selectedSubtopic, setSelectedSubtopic] = useState('');
@@ -84,18 +78,29 @@ const ViewLearningMaterialMock = () => {
   });
 
   return (
-    <Box sx={{ backgroundColor: palette.bg, minHeight: '100vh', py: 6 }}>
-      <Container maxWidth="md">
+    <Box sx={{
+      backgroundColor: theme.palette.background.default,
+      minHeight: '100vh',
+      width: '100vw',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'flex-start',
+      p: 4
+    }}>
+      <Box sx={{ width: '100%', maxWidth: 900 }}>
         <Card sx={{ p: 4, boxShadow: 3, borderRadius: 3 }}>
           {view === 'select' && (
             <>
-              <Typography variant="h3" align="center" sx={{ fontWeight: 800, color: palette.primary, mb: 1, letterSpacing: 1 }}>
-                1DILE MATH APP
-              </Typography>
-              <Typography variant="subtitle1" align="center" sx={{ color: palette.text, mb: 4 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <OndemandVideo sx={{ fontSize: 40, color: theme.palette.primary.main, mr: 2 }} />
+                <Typography variant="h4" sx={{ fontWeight: 700, color: theme.palette.text.primary }}>
+                  Learning Material (Demo)
+                </Typography>
+              </Box>
+              <Typography variant="subtitle1" align="center" sx={{ color: theme.palette.text.secondary, mb: 4 }}>
                 Access a variety of learning resources to boost your understanding. Choose between interactive video lessons and downloadable PDF worksheets tailored for your grade.
               </Typography>
-              <Typography variant="h4" align="center" sx={{ fontWeight: 700, color: palette.text, mb: 4 }}>
+              <Typography variant="h4" align="center" sx={{ fontWeight: 700, color: theme.palette.text.primary, mb: 4 }}>
                 Choose Learning Material
               </Typography>
               <Grid container spacing={4} justifyContent="center">
@@ -115,10 +120,10 @@ const ViewLearningMaterialMock = () => {
                     variant="contained"
                     color="secondary"
                     startIcon={<OndemandVideo />}
-                    sx={{ width: '100%', height: 120, fontSize: 22, mb: 2, bgcolor: palette.accent, color: 'white', '&:hover': { bgcolor: '#FFA000' } }}
+                    sx={{ width: '100%', height: 120, fontSize: 22, mb: 2, bgcolor: theme.palette.secondary.main, color: 'white', '&:hover': { bgcolor: theme.palette.secondary.dark } }}
                     onClick={() => setView('video')}
                   >
-                    Videos
+                    Video Lessons
                   </Button>
                 </Grid>
               </Grid>
@@ -127,71 +132,41 @@ const ViewLearningMaterialMock = () => {
 
           {view === 'pdf' && (
             <>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                <Button
-                  startIcon={<ArrowBack />}
-                  onClick={() => setView('select')}
-                  sx={{ mr: 2 }}
-                >
-                  Back
-                </Button>
-                <Typography variant="h5" sx={{ flexGrow: 1, color: palette.primary }}>
-                  PDF Worksheets
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
-                <Box sx={{ minWidth: 180 }}>
-                  <Typography variant="body2" sx={{ mb: 0.5 }}>Topic</Typography>
-                  <select
-                    value={selectedTopic}
-                    onChange={e => { setSelectedTopic(e.target.value); setSelectedSubtopic(''); }}
-                    style={{ width: '100%', padding: 8, borderRadius: 4, border: '1px solid #ccc' }}
-                  >
-                    <option value="">All</option>
-                    {topics.map(t => (
-                      <option key={t.topic} value={t.topic}>{t.topic}</option>
-                    ))}
-                  </select>
-                </Box>
-                <Box sx={{ minWidth: 180 }}>
-                  <Typography variant="body2" sx={{ mb: 0.5 }}>Subtopic</Typography>
-                  <select
-                    value={selectedSubtopic}
-                    onChange={e => setSelectedSubtopic(e.target.value)}
-                    style={{ width: '100%', padding: 8, borderRadius: 4, border: '1px solid #ccc' }}
-                    disabled={!selectedTopic}
-                  >
-                    <option value="">All</option>
-                    {topics.find(t => t.topic === selectedTopic)?.subtopics.map(st => (
-                      <option key={st} value={st}>{st}</option>
-                    ))}
-                  </select>
-                </Box>
-              </Box>
-              <Divider sx={{ mb: 2 }} />
-              <TableContainer component={Paper}>
+              <Button
+                startIcon={<ArrowBack />}
+                sx={{ mb: 3 }}
+                onClick={() => setView('select')}
+              >
+                Back
+              </Button>
+              <Typography variant="h5" sx={{ fontWeight: 700, color: theme.palette.text.primary, mb: 3 }}>
+                Worksheets (PDF)
+              </Typography>
+              <TableContainer component={Paper} sx={{ mb: 4 }}>
                 <Table>
                   <TableHead>
-                    <TableRow sx={{ backgroundColor: palette.primary }}>
+                    <TableRow sx={{ backgroundColor: theme.palette.primary.main }}>
                       <TableCell sx={{ color: 'white' }}>File Name</TableCell>
                       <TableCell sx={{ color: 'white' }}>Description</TableCell>
-                      <TableCell sx={{ color: 'white' }}>Action</TableCell>
+                      <TableCell sx={{ color: 'white' }}>Download</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {filteredPDFs.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={3} align="center">No worksheets found for the selected filters.</TableCell>
+                        <TableCell colSpan={3} align="center">
+                          <Typography color="textSecondary">No PDFs found for the selected filters.</Typography>
+                        </TableCell>
                       </TableRow>
                     ) : (
-                      filteredPDFs.map((pdf) => (
+                      filteredPDFs.map(pdf => (
                         <TableRow key={pdf.id}>
                           <TableCell>{pdf.file_name}</TableCell>
                           <TableCell>{pdf.description}</TableCell>
                           <TableCell>
                             <Button
-                              variant="contained"
-                              color="info"
+                              variant="outlined"
+                              color="primary"
                               size="small"
                               href={pdf.file_path}
                               target="_blank"
@@ -242,13 +217,13 @@ const ViewLearningMaterialMock = () => {
               </Box>
               <Divider sx={{ mb: 2 }} />
               {filteredVideos.length === 0 ? (
-                <Typography align="center" sx={{ my: 4 }} color="text.secondary">
+                <Typography align="center" sx={{ my: 4 }} color="textSecondary">
                   No videos found for the selected filters.
                 </Typography>
               ) : (
                 filteredVideos.map((video, idx) => (
                   <Box key={idx} sx={{ mb: 4 }}>
-                    <Typography variant="h6" sx={{ color: palette.text }} gutterBottom>
+                    <Typography variant="h6" sx={{ color: theme.palette.text.primary }} gutterBottom>
                       {video.video_name}
                     </Typography>
                     <Typography variant="body2" sx={{ mb: 1 }}>
@@ -271,9 +246,9 @@ const ViewLearningMaterialMock = () => {
             </>
           )}
         </Card>
-      </Container>
+      </Box>
     </Box>
   );
 };
 
-export default ViewLearningMaterialMock; 
+export default ViewLearningMaterialMock;

@@ -39,6 +39,7 @@ const AttemptQuiz = () => {
   const [timeLeft, setTimeLeft] = useState(120); // 2 minutes per question
   const [showResults, setShowResults] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
+  const [rawFile, setRawFile] = useState(null);
   const [showTimeUpDialog, setShowTimeUpDialog] = useState(false);
   const [showReviewDialog, setShowReviewDialog] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
@@ -167,13 +168,14 @@ const AttemptQuiz = () => {
     const file = event.target.files[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        setSnackbar({ 
-          open: true, 
-          message: 'File size should be less than 5MB', 
-          severity: 'error' 
+        setSnackbar({
+          open: true,
+          message: 'File size should be less than 5MB',
+          severity: 'error'
         });
         return;
       }
+      setRawFile(file);
       setUploadedFile(URL.createObjectURL(file));
     }
   };
@@ -188,22 +190,37 @@ const AttemptQuiz = () => {
     try {
       const score = calculateScore();
       const totalQuestions = quizData.questions.length;
+      let imageUrl = null;
+
+      if (rawFile) {
+        const fileName = `${user.id}_${Date.now()}`;
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('quiz-submissions')
+          .upload(fileName, rawFile);
+
+        if (uploadError) {
+          throw new Error(uploadError.message || 'Failed to upload image');
+        }
+
+        imageUrl = `https://bitujnpcakhljharmimp.supabase.co/storage/v1/object/public/quiz-submissions/${fileName}`;
+      }
       
       // Save quiz result to Supabase
       const { error } = await supabase
         .from('quiz_results')
         .insert([{
           quiz_id: quizId,
-          quiz_title: quizData.title,
-          quiz_grade: quizData.grade,
-          quiz_topic: quizData.topic,
-          quiz_subtopic: quizData.subtopic,
-          student_answers: selectedAnswers,
+          quiz_title: quizData.title || 'Untitled Quiz',
+          quiz_grade: quizData.grade || 'N/A',
+          quiz_topic: quizData.topic || 'N/A',
+          quiz_subtopic: quizData.subtopic || 'N/A',
+          student_answers: JSON.stringify(selectedAnswers),
           score: score,
           total_questions: totalQuestions,
           percentage: Math.round((score / totalQuestions) * 100),
           submitted_at: new Date().toISOString(),
-          student_id: user.id
+          student_id: user.id,
+          image_url: imageUrl,
         }]);
 
       if (error) {
@@ -217,10 +234,11 @@ const AttemptQuiz = () => {
       });
       navigate('/view-results-student');
     } catch (err) {
-      setSnackbar({ 
-        open: true, 
-        message: `Error: ${err.message}`, 
-        severity: 'error' 
+      console.error("Full error submitting quiz:", err);
+      setSnackbar({
+        open: true,
+        message: `Error: ${err.message}`,
+        severity: 'error'
       });
     }
   };

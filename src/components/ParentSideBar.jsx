@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import StudentMascot from './StudentMascot';
+import StudentMascotPopup from './StudentMascotPopup';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   Drawer,
@@ -161,6 +163,10 @@ const ParentSidebar = ({ user }) => {
     </>
   );
 
+  // Mascot/modal state
+  const [modalOpen, setModalOpen] = useState(false);
+  const [bubbleVisible, setBubbleVisible] = useState(true);
+
   return (
     <>
       {/* Mobile Menu Button */}
@@ -207,6 +213,13 @@ const ParentSidebar = ({ user }) => {
       >
         {drawerContent}
       </Drawer>
+      <StudentMascot
+        bubbleMessage="Learn more by clicking me!"
+        bubbleVisible={bubbleVisible}
+        onBubbleClose={() => setBubbleVisible(false)}
+        onClick={() => setModalOpen(true)}
+      />
+      <StudentMascotPopup open={modalOpen} onClose={() => setModalOpen(false)} />
     </>
   );
 };

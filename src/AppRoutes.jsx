@@ -5,6 +5,7 @@ import App from './App';
 import IndexPage from './components/IndexPage';
 import Login from './pages/Login';
 import ParentSignup from './pages/ParentSignup';
+import FeaturesPage from './pages/FeaturesPage';
 import StudentDashboard from './pages/StudentDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import ParentDashboard from './pages/ParentDashboard';
@@ -42,13 +43,14 @@ import TutorDirectParentMock from './pages/TutorDirectParentMock';
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<App />}>        
+      <Route path="parent-signup" element={<ParentSignup />} />
+      <Route path="/" element={<App />}>
         {/* Public */}
         <Route index element={<IndexPage />} />
         <Route path="login" element={<Login />} />
-        <Route path="parent-signup" element={<ParentSignup />} />
         <Route path="homepage" element={<Homepage />} />
         <Route path="logout" element={<Logout />} />
+        <Route path="features" element={<FeaturesPage />} />
 
         {/* Admin Routes */}
         <Route path="admindashboard" element={<AdminDashboard />} />

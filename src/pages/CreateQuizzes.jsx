@@ -18,8 +18,20 @@ import { supabase } from '../config/supabase';
 
 const topicsData = {
   'Grade 8': {
-    Algebra: ['Linear Equations', 'Exponents'],
-    Geometry: ['Triangles', 'Circles'],
+    Whole_Numbers: ['Properties of whole numbers','Calculations using whole numbers','Calculation techniques','Multiples and factors','Solving problems'],
+    Integers: ['Calculations with integers','Properties of integers',],
+    Common_Fractions: ['Calculations with fractions','Calculation techniques','Percentage','Solving problems'],
+    Decimal_Fractions: ['Calculations with decimal fractions','Calculation techniques','Solving problems'],
+    Exponents: ['Comparing and representing numbers in exponential form','Calculations with exponents','Solving problems'],
+    Numeric_and_Geometric_Patterns: ['Investigate and extend patterns'],
+    Functions_and_Relationships: ['Input and output values','Equivalent forms'],
+    Algebraic_Expressions: ['Algebraic language','Expand and simplify algebraic expression','Expand and simplify algebraic expressions'],
+    Algebraic_Equations: ['Equations'],
+    Geometry_of_Straight_Lines: ['Angle relationships','Solving problems'],
+    Geometry_of_2D_Shapes: ['Classifying 2D shapes','Constructions', 'Similar and congruent 2D shapes', 'Solving problems'],
+    Graphs: ['Interpreting graphs','Drawing graphs'],
+    Theorem_of_Pythagoras: ['Develop and use the Theorem of Pythagoras'],
+    Area_and_Perimeter_of_2D_Shapes: ['Area and perimeter','Calculations and solving problems'],
   },
   'Grade 9': {
     Algebra: ['Quadratic Equations', 'Polynomials'],

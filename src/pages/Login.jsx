@@ -24,15 +24,6 @@ import {
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-// Blue-themed palette
-const palette = {
-  bgGradient: 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)',
-  cardBg: '#FFFFFF',
-  primary: '#1976D2',
-  hover: '#1565C0',
-  mutedText: '#607D8B'
-};
-
 const roles = [
   { value: 'student', label: 'Student', icon: <School /> },
   { value: 'admin', label: 'Admin', icon: <AdminPanelSettings /> },
@@ -54,13 +45,13 @@ const Login = () => {
       console.log('User authenticated with role:', userRole);
       switch (userRole) {
         case 'admin':
-          navigate('/admindashboard2');
+          navigate('/admindashboard');
           break;
         case 'student':
-          navigate('/student-dashboard2');
+          navigate('/student-dashboard');
           break;
         case 'parent':
-          navigate('/parent-dashboard2');
+          navigate('/parent-dashboard');
           break;
         default:
           navigate('/');
@@ -91,7 +82,7 @@ const Login = () => {
     <Box
       sx={{
         minHeight: '100vh',
-        background: palette.bgGradient,
+        background: (theme) => `linear-gradient(135deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.dark} 100%)`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -104,16 +95,14 @@ const Login = () => {
           width: '100%',
           maxWidth: 400,
           p: 4,
-          borderRadius: 3,
-          backgroundColor: palette.cardBg
         }}
       >
         <Box sx={{ textAlign: 'center', mb: 3 }}>
-          <LockOpen sx={{ fontSize: 48, color: palette.primary }} />
+          <LockOpen sx={{ fontSize: 48, color: 'text.primary' }} />
           <Typography variant="h4" sx={{ fontWeight: 700, mt: 1 }}>
             Login
           </Typography>
-          <Typography variant="body2" sx={{ color: palette.mutedText }}>
+          <Typography variant="body1" color="text.secondary">
             Choose your role and sign in
           </Typography>
         </Box>
@@ -132,9 +121,9 @@ const Login = () => {
               sx={{
                 textTransform: 'none',
                 fontWeight: 500,
-                color: role === r.value ? palette.cardBg : palette.primary,
-                bgcolor: role === r.value ? palette.primary : 'transparent',
-                '&:hover': { bgcolor: role === r.value ? palette.hover : `${palette.primary}10` }
+                color: role === r.value ? 'primary.contrastText' : 'text.primary',
+                bgcolor: role === r.value ? 'primary.main' : 'transparent',
+                '&:hover': { bgcolor: role === r.value ? 'primary.dark' : 'action.hover' }
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -185,26 +174,21 @@ const Login = () => {
               <Button
                 type="submit"
                 variant="contained"
+                color="primary"
                 fullWidth
                 size="large"
-                sx={{
-                  backgroundColor: palette.primary,
-                  textTransform: 'none',
-                  fontWeight: 600,
-                  '&:hover': { backgroundColor: palette.hover }
-                }}
                 disabled={loading}
               >
-                {loading ? <CircularProgress size={24} color="inherit" /> : `Login as ${roles.find(r => r.value === role).label}`}
+                {loading ? <CircularProgress size={24} color="inherit" /> : `Login as ${roles.find(r => r.value === role)?.label}`}
               </Button>
             </Box>
             <Box sx={{ mt: 3, textAlign: 'center' }}>
-              <Typography variant="body2" sx={{ color: palette.mutedText }}>
+              <Typography variant="body1" color="text.secondary">
                 Don't have an account?{' '}
                 <Button
                   variant="text"
                   size="small"
-                  sx={{ color: palette.primary, textTransform: 'none', fontWeight: 600, p: 0, minWidth: 0 }}
+                  sx={{ p: 0, minWidth: 0, color: 'secondary.main' }}
                   href="/parent-signup"
                   component="a"
                 >

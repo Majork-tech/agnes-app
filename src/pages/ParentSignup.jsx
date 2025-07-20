@@ -28,7 +28,7 @@ const steps = [
   'Review'
 ];
 
-const grades = ['8', '9', '10', '11', '12'];
+const grades = ['6', '7', '8', '9', '10', '11', '12'];
 const topicsByGrade = {
   '8': ['Algebra Basics', 'Geometry', 'Fractions', 'Decimals'],
   '9': ['Linear Equations', 'Quadratic Equations', 'Trigonometry', 'Statistics'],
@@ -52,7 +52,8 @@ const ParentSignup = () => {
     learnerGrade: '',
     helpTopics: [],
     helpDescription: '',
-    preferredDates: [null, null, null]
+    preferredDays: [],
+    preferredTime: ''
   });
   const theme = useTheme();
 
@@ -80,7 +81,6 @@ const ParentSignup = () => {
     setLoading(true);
     setError('');
     try {
-      const formatted = form.preferredDates.map(d => d ? dayjs(d).format('YYYY-MM-DD') : null);
       const { error } = await supabase.from('parent_signup_requests').insert([{
         parent_first_name: form.parentFirstName,
         parent_last_name: form.parentLastName,
@@ -91,7 +91,8 @@ const ParentSignup = () => {
         learner_grade: form.learnerGrade,
         help_topics: form.helpTopics,
         help_description: form.helpDescription,
-        preferred_dates: formatted,
+        preferred_days: form.preferredDays,
+        preferred_time: form.preferredTime,
         status: 'pending',
         submitted_at: new Date().toISOString()
       }]);
@@ -110,7 +111,7 @@ const ParentSignup = () => {
       'learnerFirstName','learnerLastName','learnerEmail','learnerGrade'
     ].some((k) => !form[k]);
     if (activeStep === 1) return form.helpTopics.length === 0;
-    if (activeStep === 2) return form.preferredDates.some((d) => !d);
+    if (activeStep === 2) return !(form.preferredDays && form.preferredDays.length > 0 && form.preferredTime && form.preferredTime.trim() !== '');
     return false;
   };
 
@@ -132,36 +133,69 @@ const ParentSignup = () => {
         );
       case 1:
         return (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-            <Typography variant="h6">Help Needed</Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Typography variant="h6">Help Details</Typography>
             <FormGroup>
-              {topicsByGrade[form.learnerGrade]?.map((t) => (
-                <FormControlLabel key={t} control={<Checkbox checked={form.helpTopics.includes(t)} onChange={() => toggleTopic(t)} />} label={t} />
-              ))}
+              <FormControlLabel
+                control={<Checkbox checked={form.helpTopics.includes('I need help until my final year exam')} onChange={() => setForm(prev => ({ ...prev, helpTopics: prev.helpTopics.includes('I need help until my final year exam') ? prev.helpTopics.filter(h => h !== 'I need help until my final year exam') : [...prev.helpTopics, 'I need help until my final year exam'] }))} />}
+                label="I need help until my final year exam"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={form.helpTopics.includes('I need help with a specific topic')} onChange={() => setForm(prev => ({ ...prev, helpTopics: prev.helpTopics.includes('I need help with a specific topic') ? prev.helpTopics.filter(h => h !== 'I need help with a specific topic') : [...prev.helpTopics, 'I need help with a specific topic'] }))} />}
+                label="I need help with a specific topic"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={form.helpTopics.includes('I am not yet sure, all I know my marks are not good')} onChange={() => setForm(prev => ({ ...prev, helpTopics: prev.helpTopics.includes('I am not yet sure, all I know my marks are not good') ? prev.helpTopics.filter(h => h !== 'I am not yet sure, all I know my marks are not good') : [...prev.helpTopics, 'I am not yet sure, all I know my marks are not good'] }))} />}
+                label="I am not yet sure, all I know my marks are not good"
+              />
             </FormGroup>
-            {form.helpTopics.length > 0 && <TextField label="Describe Help" name="helpDescription"
-              value={form.helpDescription} onChange={handleChange} fullWidth multiline minRows={3} />}
+            {form.helpTopics.includes('I need help with a specific topic') && (
+              <TextField label="Which topic? (optional)" name="helpDescription"
+                value={form.helpDescription} onChange={handleChange} fullWidth multiline minRows={2} />
+            )}
           </Box>
         );
       case 2:
         return (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <Typography variant="h6">Preferred Dates</Typography>
-            {form.preferredDates.map((d, i) => (
-              <DatePicker
-                key={i}
-                label={`Choice ${i+1}`}
-                value={d}
-                onChange={(date) => setDate(i, date)}
-                slotProps={{ textField: { fullWidth: true } }}
-                shouldDisableDate={date => date.isBefore(dayjs().startOf('day'))}
-              />
-            ))}
+            <Typography variant="h6">Preferred Days & Time</Typography>
+            <FormGroup row>
+              {["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"].map(day => (
+                <FormControlLabel
+                  key={day}
+                  control={<Checkbox checked={form.preferredDays?.includes(day)} onChange={() => {
+                    setForm(prev => {
+                      const days = prev.preferredDays || [];
+                      return {
+                        ...prev,
+                        preferredDays: days.includes(day)
+                          ? days.filter(d => d !== day)
+                          : [...days, day]
+                      };
+                    });
+                  }} />}
+                  label={day.slice(0,3)}
+                />
+              ))}
+            </FormGroup>
+            <TextField
+              label="Preferred Time (e.g. 15:30 or 3:30pm)"
+              name="preferredTime"
+              value={form.preferredTime || ''}
+              onChange={handleChange}
+              fullWidth
+            />
           </Box>
         );
       case 3:
         return (
-          <Box sx={{ display: 'grid', gap: 1 }}>
+          <Box sx={{ display: 'grid', gap: 2 }}>
+            <Typography variant="h5" color="error" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+              A R200 reserve fee is required to secure your child's place and will be discounted in the first invoice.
+            </Typography>
+            <Typography variant="subtitle1" color="primary" sx={{ textAlign: 'center', mb: 1 }}>
+              A follow-up email with banking details will be sent to you.
+            </Typography>
             <Typography variant="h6">Review & Submit</Typography>
             {Object.entries(form).map(([key, val]) => (
               <Typography key={key}><strong>{key}:</strong> {Array.isArray(val)?val.join(', '):(val?.toString() || '-')}</Typography>
@@ -174,12 +208,18 @@ const ParentSignup = () => {
   };
 
   return (
-    <Box sx={{ py: 6, background: theme.palette.grey[100], minHeight: '100vh' }}>
+    <Box sx={{ py: 6, bgcolor: 'background.default', minHeight: '100vh' }}>
       <Container maxWidth="sm">
-        <Paper sx={{ p: 4, borderRadius: 2 }} elevation={4}>
-          <Typography variant="h4" align="center" gutterBottom>Signup Request</Typography>
-          <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 3 }}>
-            {steps.map((label) => <Step key={label}><StepLabel>{label}</StepLabel></Step>)}
+        <Paper sx={{ p: 4 }} elevation={4}>
+          <Typography variant="h4" align="center" gutterBottom>
+            Signup Request
+          </Typography>
+          <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4 }}>
+            {steps.map((label) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
           </Stepper>
           {error && <Alert severity="error" sx={{ mb:2 }}>{error}</Alert>}
           {success && <Alert severity="success" sx={{ mb:2 }}>{success}</Alert>}

@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import {
-  Container,
   Card,
   Typography,
   Box,
@@ -17,16 +16,11 @@ import {
   ListItemSecondaryAction,
   Tooltip
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { Send, AttachFile, ArrowBack, VideoCall } from '@mui/icons-material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
-const palette = {
-  bg: '#F7FAFC',
-  card: '#FFFFFF',
-  primary: '#1976D2',
-  accent: '#FFB300',
-  text: '#37474F',
-};
+
 
 const mockTutor = {
   name: 'Tutor Jane',
@@ -75,22 +69,31 @@ const TutorDirectMock = () => {
     if (file) setUpload(file);
   };
 
+  const theme = useTheme();
   return (
-    <Box sx={{ backgroundColor: palette.bg, minHeight: '100vh', py: 6 }}>
-      <Container maxWidth="sm">
+    <Box sx={{
+      backgroundColor: theme.palette.background.default,
+      minHeight: '100vh',
+      width: '100vw',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'flex-start',
+      p: 4
+    }}>
+      <Box sx={{ width: '100%', maxWidth: 600 }}>
         <Card sx={{ p: 3, boxShadow: 3, borderRadius: 3, minHeight: 600, display: 'flex', flexDirection: 'column' }}>
-          <Typography variant="h4" align="center" sx={{ fontWeight: 800, color: palette.primary, mb: 1, letterSpacing: 1 }}>
+          <Typography variant="h4" align="center" sx={{ fontWeight: 800, color: theme.palette.primary.main, mb: 1, letterSpacing: 1 }}>
             1DILE MATH APP
           </Typography>
-          <Typography variant="subtitle1" align="center" sx={{ color: palette.text, mb: 3 }}>
+          <Typography variant="subtitle1" align="center" sx={{ color: theme.palette.text.primary, mb: 3 }}>
             Chat with your tutor, upload files, and get help in real time. You can also join a live Zoom class for face-to-face support.
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
             <Button component={RouterLink} to="/student-dashboard2" startIcon={<ArrowBack />} sx={{ mr: 2 }}>
               Back
             </Button>
-            <Avatar sx={{ bgcolor: palette.primary, mr: 2 }}>{mockTutor.name[0]}</Avatar>
-            <Typography variant="h5" sx={{ fontWeight: 700, color: palette.text }}>
+            <Avatar sx={{ bgcolor: theme.palette.primary.main, mr: 2 }}>{mockTutor.name[0]}</Avatar>
+            <Typography variant="h5" sx={{ fontWeight: 700, color: theme.palette.text.primary }}>
               Tutor Direct (Demo)
             </Typography>
           </Box>
@@ -99,7 +102,7 @@ const TutorDirectMock = () => {
               {messages.map((msg, idx) => (
                 <ListItem key={idx} alignItems={msg.sender === 'student' ? 'right' : 'left'}>
                   <ListItemAvatar>
-                    <Avatar sx={{ bgcolor: msg.sender === 'student' ? palette.accent : palette.primary }}>
+                    <Avatar sx={{ bgcolor: msg.sender === 'student' ? theme.palette.secondary.main : theme.palette.primary.main }}>
                       {msg.sender === 'student' ? 'S' : 'T'}
                     </Avatar>
                   </ListItemAvatar>
@@ -172,7 +175,7 @@ const TutorDirectMock = () => {
             </Button>
           </Box>
         </Card>
-      </Container>
+      </Box>
     </Box>
   );
 };

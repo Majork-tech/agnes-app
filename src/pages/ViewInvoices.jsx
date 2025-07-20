@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Container,
   Card,
   Typography,
   Box,
@@ -15,16 +14,11 @@ import {
   TableHead,
   TableRow
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { Receipt, CloudUpload, ArrowBack } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
 
-const palette = {
-  bg: '#F7FAFC',
-  card: '#FFFFFF',
-  primary: '#1976D2',
-  accent: '#FFB300',
-  text: '#37474F',
-};
+
 
 const mockPending = [
   {
@@ -58,18 +52,27 @@ const mockPaid = [
 ];
 
 const ViewInvoices = () => {
+  const theme = useTheme();
   const [view, setView] = useState('select'); // select | invoices | upload
 
   return (
-    <Box sx={{ backgroundColor: palette.bg, minHeight: '100vh', py: 6 }}>
-      <Container maxWidth="md">
+    <Box sx={{
+      backgroundColor: theme.palette.background.default,
+      minHeight: '100vh',
+      width: '100vw',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'flex-start',
+      p: 4
+    }}>
+      <Box sx={{ width: '100%', maxWidth: 900 }}>
         <Card sx={{ p: 4, boxShadow: 3, borderRadius: 3 }}>
           {view === 'select' && (
             <>
-              <Typography variant="h4" align="center" sx={{ fontWeight: 800, color: palette.primary, mb: 1, letterSpacing: 1 }}>
+              <Typography variant="h4" align="center" sx={{ fontWeight: 800, color: theme.palette.primary.main, mb: 1, letterSpacing: 1 }}>
                 Invoices
               </Typography>
-              <Typography variant="subtitle1" align="center" sx={{ color: palette.text, mb: 4 }}>
+              <Typography variant="subtitle1" align="center" sx={{ color: theme.palette.text.primary, mb: 4 }}>
                 Choose an option below to view your invoices or upload proof of payment.
               </Typography>
               <Grid container spacing={4} justifyContent="center">
@@ -89,7 +92,7 @@ const ViewInvoices = () => {
                     variant="contained"
                     color="secondary"
                     startIcon={<CloudUpload />}
-                    sx={{ width: '100%', height: 100, fontSize: 20, mb: 2, bgcolor: palette.accent, color: 'white', '&:hover': { bgcolor: '#FFA000' } }}
+                    sx={{ width: '100%', height: 100, fontSize: 20, mb: 2, bgcolor: theme.palette.secondary.main, color: 'white', '&:hover': { bgcolor: '#FFA000' } }}
                     onClick={() => setView('upload')}
                   >
                     Upload Proof of Payment
@@ -109,18 +112,18 @@ const ViewInvoices = () => {
                 >
                   Back
                 </Button>
-                <Typography variant="h5" sx={{ flexGrow: 1, color: palette.primary }}>
+                <Typography variant="h5" sx={{ flexGrow: 1, color: theme.palette.primary.main }}>
                   Invoices
                 </Typography>
               </Box>
               <Divider sx={{ mb: 3 }} />
-              <Typography variant="h6" sx={{ color: palette.primary, mb: 2 }}>
+              <Typography variant="h6" sx={{ color: theme.palette.primary.main, mb: 2 }}>
                 Invoices Pending
               </Typography>
               <TableContainer component={Paper} sx={{ mb: 4 }}>
                 <Table>
                   <TableHead>
-                    <TableRow sx={{ backgroundColor: palette.primary }}>
+                    <TableRow sx={{ backgroundColor: theme.palette.primary.main }}>
                       <TableCell sx={{ color: 'white' }}>Invoice</TableCell>
                       <TableCell sx={{ color: 'white' }}>Amount</TableCell>
                       <TableCell sx={{ color: 'white' }}>Issue Date</TableCell>
@@ -147,13 +150,13 @@ const ViewInvoices = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
-              <Typography variant="h6" sx={{ color: palette.primary, mb: 2 }}>
+              <Typography variant="h6" sx={{ color: theme.palette.primary.main, mb: 2 }}>
                 Invoices Paid
               </Typography>
               <TableContainer component={Paper}>
                 <Table>
                   <TableHead>
-                    <TableRow sx={{ backgroundColor: palette.primary }}>
+                    <TableRow sx={{ backgroundColor: theme.palette.primary.main }}>
                       <TableCell sx={{ color: 'white' }}>Invoice</TableCell>
                       <TableCell sx={{ color: 'white' }}>Amount</TableCell>
                       <TableCell sx={{ color: 'white' }}>Issue Date</TableCell>
@@ -195,12 +198,12 @@ const ViewInvoices = () => {
                 >
                   Back
                 </Button>
-                <Typography variant="h5" sx={{ flexGrow: 1, color: palette.primary }}>
+                <Typography variant="h5" sx={{ flexGrow: 1, color: theme.palette.primary.main }}>
                   Upload Proof of Payment
                 </Typography>
               </Box>
               <Divider sx={{ mb: 3 }} />
-              <Typography align="center" sx={{ color: palette.text, mb: 2 }}>
+              <Typography align="center" sx={{ color: theme.palette.text.primary, mb: 2 }}>
                 (Mock upload form goes here)
               </Typography>
               <Button variant="contained" color="primary" fullWidth disabled>
@@ -209,7 +212,7 @@ const ViewInvoices = () => {
             </>
           )}
         </Card>
-      </Container>
+      </Box>
     </Box>
   );
 };

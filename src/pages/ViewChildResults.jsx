@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Container,
   Card,
   Typography,
   Box,
@@ -19,16 +18,11 @@ import {
   DialogContent,
   DialogActions
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { Download, Person, Assessment, ArrowBack } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
 
-const palette = {
-  bg: '#F7FAFC',
-  card: '#FFFFFF',
-  primary: '#1976D2',
-  accent: '#FFB300',
-  text: '#37474F',
-};
+
 
 const mockStudent = {
   name: 'John Doe',
@@ -77,6 +71,7 @@ const mockAttendance = [
 ];
 
 const ViewChildResults = () => {
+  const theme = useTheme();
   const [checkedRow, setCheckedRow] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [reviewedRows, setReviewedRows] = useState([]);
@@ -113,8 +108,16 @@ const ViewChildResults = () => {
   };
 
   return (
-    <Box sx={{ backgroundColor: palette.bg, minHeight: '100vh', py: 6 }}>
-      <Container maxWidth="md">
+    <Box sx={{
+      backgroundColor: theme.palette.background.default,
+      minHeight: '100vh',
+      width: '100vw',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'flex-start',
+      p: 4
+    }}>
+      <Box sx={{ width: '100%', maxWidth: 900 }}>
         <Card sx={{ p: 4, boxShadow: 3, borderRadius: 3 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
             <Button
@@ -125,33 +128,20 @@ const ViewChildResults = () => {
             >
               Back
             </Button>
-            <Assessment sx={{ fontSize: 40, color: palette.primary, mr: 2 }} />
-            <Typography variant="h4" sx={{ fontWeight: 800, color: palette.primary, letterSpacing: 1 }}>
-              Student Full Report
-            </Typography>
-          </Box>
-          <Divider sx={{ mb: 3 }} />
-          {/* Student Info */}
-          <Box sx={{ mb: 3 }}>
-            <Typography variant="subtitle1" sx={{ color: palette.text, mb: 0.5 }}>
-              <Person sx={{ fontSize: 20, mr: 1, mb: '-4px' }} /> {mockStudent.name} (Grade {mockStudent.grade})
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary', mb: 0.5 }}>
-              Email: {mockStudent.email}
-            </Typography>
-            <Typography variant="body2" sx={{ color: palette.primary, fontWeight: 600 }}>
+            <Assessment sx={{ fontSize: 40, color: theme.palette.primary.main, mr: 2 }} />
+            <Typography variant="h4" sx={{ fontWeight: 800, color: theme.palette.primary.main, letterSpacing: 1 }}>
               Average Score: {averageScore}
             </Typography>
           </Box>
           <Divider sx={{ mb: 3 }} />
           {/* Quiz Table */}
-          <Typography variant="h6" sx={{ color: palette.primary, mb: 2 }}>
+          <Typography variant="h6" sx={{ color: theme.palette.primary.main, mb: 2 }}>
             Quiz Results & Tutor Reports
           </Typography>
           <TableContainer component={Paper} sx={{ mb: 2 }}>
             <Table>
               <TableHead>
-                <TableRow sx={{ backgroundColor: palette.primary }}>
+                <TableRow sx={{ backgroundColor: theme.palette.primary.main }}>
                   <TableCell sx={{ color: 'white' }}></TableCell>
                   <TableCell sx={{ color: 'white' }}>Quiz Name</TableCell>
                   <TableCell sx={{ color: 'white' }}>Score</TableCell>
@@ -233,13 +223,13 @@ const ViewChildResults = () => {
 
           {/* Attendance Register Table */}
           <Divider sx={{ my: 4 }} />
-          <Typography variant="h6" sx={{ color: palette.primary, mb: 2 }}>
+          <Typography variant="h6" sx={{ color: theme.palette.primary.main, mb: 2 }}>
             Attendance Register
           </Typography>
           <TableContainer component={Paper} sx={{ mb: 2 }}>
             <Table>
               <TableHead>
-                <TableRow sx={{ backgroundColor: palette.primary }}>
+                <TableRow sx={{ backgroundColor: theme.palette.primary.main }}>
                   <TableCell sx={{ color: 'white' }}></TableCell>
                   <TableCell sx={{ color: 'white' }}>Class Title</TableCell>
                   <TableCell sx={{ color: 'white' }}>Date</TableCell>
@@ -276,7 +266,7 @@ const ViewChildResults = () => {
             </DialogActions>
           </Dialog>
         </Card>
-      </Container>
+      </Box>
     </Box>
   );
 };

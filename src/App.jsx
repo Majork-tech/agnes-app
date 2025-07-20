@@ -1,7 +1,9 @@
+import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import StudentSidebar from './components/StudentSidebar';
 import ParentSidebar from './components/ParentSideBar';
+import Loader from './components/Loader';
 import { Box, useTheme } from '@mui/material';
 
 // Define constants at the top level
@@ -12,6 +14,7 @@ export default function App() {
   const location = useLocation();
   const theme = useTheme();
   const isHomepage = location.pathname === '/';
+  const [loading, setLoading] = React.useState(isHomepage);
 
   // Determine the user's role based on the current route
   const getRoleFromRoute = () => {
@@ -26,6 +29,16 @@ export default function App() {
   };
 
   const role = getRoleFromRoute();
+
+  React.useEffect(() => {
+    if (isHomepage) {
+      setLoading(true);
+      const timer = setTimeout(() => setLoading(false), 7000);
+      return () => clearTimeout(timer);
+    } else {
+      setLoading(false);
+    }
+  }, [isHomepage]);
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -55,7 +68,7 @@ export default function App() {
           }),
         }}
       >
-        <Outlet />
+        {loading && isHomepage ? <Loader /> : <Outlet />}
       </Box>
     </Box>
   );
